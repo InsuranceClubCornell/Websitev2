@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Insurance Club at Cornell</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --cream-dark: #EDE6D6;
+      --cornell-red: #8B1A1A;
+      --cornell-red-light: #A52020;
+      --cornell-red-dark: #6B1414;
+      --gold: #C9A84C;
+      --dark: #1A1008;
+      --text: #2C1810;
+      --text-light: #5C4030;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'EB Garamond', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 4rem;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139, 26, 26, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-logo svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--cornell-red);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1px;
+      background: var(--cornell-red);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--cornell-red); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--cornell-red);
+      padding: 0.6rem 1.4rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover { background: var(--cornell-red-dark); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 79px,
+          rgba(139,26,26,0.06) 79px,
+          rgba(139,26,26,0.06) 80px
+        );
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-shield {
+      width: 110px;
+      height: auto;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.3s forwards;
+      filter: drop-shadow(0 8px 24px rgba(139,26,26,0.18));
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--cornell-red);
+      margin-bottom: 0.3em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+      letter-spacing: -0.01em;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--cornell-red-dark);
+    }
+
+    .hero-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      font-size: 1.15rem;
+      color: var(--text-light);
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.6s forwards;
+      font-style: italic;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    .btn-primary {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--cornell-red);
+      padding: 1rem 2.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid var(--cornell-red);
+    }
+
+    .btn-primary:hover {
+      background: var(--cornell-red-dark);
+      border-color: var(--cornell-red-dark);
+    }
+
+    .btn-secondary {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      background: transparent;
+      padding: 1rem 2.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid var(--cornell-red);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(139,26,26,0.08);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      opacity: 0;
+      animation: fadeIn 1s ease 1.2s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: var(--cornell-red);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--cornell-red);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: center;
+      gap: 6rem;
+    }
+
+    .stat {
+      text-align: center;
+      color: var(--cream);
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 2rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(139,26,26,0.2);
+      max-width: 60px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--cornell-red-dark);
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+
+    .section-intro {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      font-style: italic;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ROADMAP */
+    #roadmap { background: var(--cream); }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: rgba(139,26,26,0.15);
+      border: 2px solid rgba(139,26,26,0.15);
+    }
+
+    .roadmap-card {
+      background: var(--cream);
+      padding: 2.5rem;
+      transition: background 0.3s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .roadmap-card::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -0.5rem;
+      right: 1rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(139,26,26,0.06);
+      line-height: 1;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+
+    .roadmap-card:hover { background: var(--cream-dark); }
+    .roadmap-card:hover::before { color: rgba(139,26,26,0.12); }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--cornell-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .card-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--cream);
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--cornell-red-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1.2rem;
+    }
+
+    .tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      border: 1px solid rgba(139,26,26,0.3);
+      padding: 0.25rem 0.65rem;
+    }
+
+    /* RESOURCES */
+    #resources { background: var(--cream-dark); }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .resource-category {
+      background: var(--cream);
+      border: 1px solid rgba(139,26,26,0.12);
+      padding: 2rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .resource-category:hover {
+      border-color: rgba(139,26,26,0.35);
+      box-shadow: 0 4px 24px rgba(139,26,26,0.08);
+    }
+
+    .resource-cat-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cornell-red-dark);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(139,26,26,0.12);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .resource-list {
+      list-style: none;
+    }
+
+    .resource-list li {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(139,26,26,0.06);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .resource-list li:last-child { border-bottom: none; }
+
+    .resource-list li::before {
+      content: '→';
+      color: var(--cornell-red);
+      font-size: 0.8rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    /* GLOSSARY */
+    #glossary { background: var(--cream); }
+
+    .glossary-search {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.85rem 1.25rem;
+      border: 2px solid rgba(139,26,26,0.2);
+      background: var(--cream-dark);
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      margin-bottom: 2.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .glossary-search:focus { border-color: var(--cornell-red); }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: rgba(139,26,26,0.12);
+    }
+
+    .glossary-item {
+      background: var(--cream);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .glossary-item:hover { background: var(--cream-dark); }
+
+    .glossary-term {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--cornell-red);
+      margin-bottom: 0.4rem;
+    }
+
+    .glossary-sector {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
+
+    .glossary-def {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .glossary-hidden { display: none; }
+
+    /* BLOG */
+    #blog { background: var(--cream-dark); }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .blog-card {
+      background: var(--cream);
+      overflow: hidden;
+      border: 1px solid rgba(139,26,26,0.1);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .blog-card:hover {
+      border-color: var(--cornell-red);
+      box-shadow: 0 8px 32px rgba(139,26,26,0.1);
+    }
+
+    .blog-card-img {
+      height: 180px;
+      background: var(--cornell-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog-card:first-child .blog-card-img { height: 260px; }
+
+    .blog-card-img-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--cream) 0px,
+        var(--cream) 1px,
+        transparent 1px,
+        transparent 12px
+      );
+    }
+
+    .blog-card-img-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cream);
+      opacity: 0.9;
+      z-index: 1;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .blog-card-body {
+      padding: 1.5rem;
+    }
+
+    .blog-meta {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      margin-bottom: 0.6rem;
+    }
+
+    .blog-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 0.7rem;
+    }
+
+    .blog-card:first-child .blog-title { font-size: 1.4rem; }
+
+    .blog-excerpt {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* JOIN */
+    #join {
+      background: var(--cornell-red);
+      text-align: center;
+    }
+
+    #join .section-label { color: rgba(245,240,232,0.6); justify-content: center; }
+    #join .section-label::after { background: rgba(245,240,232,0.2); }
+    #join .section-title { color: var(--cream); }
+    #join .section-intro { color: rgba(245,240,232,0.75); margin: 0 auto 3rem; }
+
+    .join-cards {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .join-card {
+      background: rgba(245,240,232,0.1);
+      border: 1px solid rgba(245,240,232,0.2);
+      padding: 2rem;
+      width: 220px;
+      text-align: left;
+      transition: background 0.2s;
+    }
+
+    .join-card:hover { background: rgba(245,240,232,0.18); }
+
+    .join-card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .join-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+
+    .join-card-text {
+      font-size: 0.88rem;
+      color: rgba(245,240,232,0.7);
+      line-height: 1.6;
+    }
+
+    .btn-cream {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      background: var(--cream);
+      padding: 1.1rem 3rem;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-cream:hover { background: var(--cream-dark); }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cream);
+      opacity: 0.7;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--cream); }
+
+    .footer-copy {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      color: rgba(245,240,232,0.3);
+      letter-spacing: 0.08em;
+    }
+
+    /* DIVIDER */
+    .ornamental-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0 0 3rem;
+      opacity: 0.4;
+    }
+
+    .ornamental-divider span {
+      height: 1px;
+      width: 80px;
+      background: var(--cornell-red);
+    }
+
+    .ornamental-divider em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--cornell-red);
+      font-size: 1.2rem;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,16,8,0.7);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--cream);
+      max-width: 780px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+      border-top: 4px solid var(--cornell-red);
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      background: var(--cornell-red);
+      padding: 2.5rem 3rem 2rem;
+      position: relative;
+    }
+    .modal-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.6);
+      margin-bottom: 0.5rem;
+    }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .modal-tagline {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: rgba(245,240,232,0.8);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: rgba(245,240,232,0.7);
+      font-size: 1.6rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+      font-family: sans-serif;
+    }
+    .modal-close:hover { color: var(--cream); }
+    .modal-body {
+      padding: 2.5rem 3rem;
+    }
+    .modal-section {
+      margin-bottom: 2.5rem;
+    }
+    .modal-section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(139,26,26,0.15);
+    }
+    .modal-section p {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+    .modal-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .modal-list {
+      list-style: none;
+      padding: 0;
+    }
+    .modal-list li {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(139,26,26,0.07);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      line-height: 1.5;
+    }
+    .modal-list li:last-child { border-bottom: none; }
+    .modal-list li::before {
+      content: '→';
+      color: var(--cornell-red);
+      font-size: 0.75rem;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+    }
+    .modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .modal-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--cornell-red);
+      padding: 0.3rem 0.75rem;
+    }
+    .modal-salary {
+      background: var(--cream-dark);
+      border-left: 3px solid var(--cornell-red);
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .modal-salary strong {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--cornell-red-dark);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Make card title look clickable */
+    .card-title {
+      cursor: pointer;
+      transition: color 0.2s;
+      display: inline-block;
+    }
+    .card-title:hover {
+      color: var(--cornell-red-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .card-title-link-hint {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cornell-red);
+      opacity: 0.7;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* FORM STYLES */
+    .form-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid rgba(139,26,26,0.2);
+      background: var(--cream-dark);
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      display: block;
+    }
+    .form-input:focus { border-color: var(--cornell-red); }
+    .form-input.error { border-color: #c0392b; }
+    .form-error {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      color: #c0392b;
+      margin-top: 0.3rem;
+      display: none;
+    }
+    .form-error.visible { display: block; }
+
+    /* Make blog cards pointer */
+    .blog-card { cursor: pointer; }
+
+    /* Blog modal body prose */
+    .blog-body-text p {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .blog-body-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cornell-red-dark);
+      margin: 1.5rem 0 0.6rem;
+    }
+    .blog-body-text ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .blog-body-text ul li {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(139,26,26,0.07);
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.55;
+    }
+    .blog-body-text ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--cornell-red);
+      font-size: 0.75rem;
+    }
+    .blog-pull-quote {
+      border-left: 3px solid var(--cornell-red);
+      padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0;
+      background: var(--cream-dark);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--cornell-red-dark);
+      line-height: 1.6;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      .stats-bar { gap: 2.5rem; padding: 2rem; flex-wrap: wrap; }
+      .roadmap-grid { grid-template-columns: 1fr 1fr; }
+      .resources-grid { grid-template-columns: 1fr; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .glossary-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <img src="data:image/jpeg;base64,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" alt="Insurance Club at Cornell" style="width:38px;height:38px;object-fit:contain;" />
+      <span class="nav-brand">Insurance Club<br>at Cornell</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#blog">Insights</a></li>
+      <li><a href="#join">Join Us</a></li>
+    </ul>
+    <a href="contact.html" target="_blank" class="nav-cta">Contact Us</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-lines"></div>
+    <p class="hero-eyebrow">Cornell University · Ithaca, New York</p>
+    <img class="hero-shield" src="data:image/jpeg;base64,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" alt="Insurance Club at Cornell Logo" />
+    <h1>The <em>Insurance</em><br>Club at Cornell</h1>
+    <p class="hero-sub">Advancing the Next Generation of Insurance Professionals</p>
+    <p class="hero-desc">Your complete guide to careers in insurance — from underwriting and actuarial science to claims, broking, and investment management.</p>
+    <div class="hero-actions">
+      <a href="#roadmap" class="btn-primary">Explore the Roadmap</a>
+      <a href="contact.html" target="_blank" class="btn-secondary">Contact Us</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-number">15+</span>
+      <span class="stat-label">Active Members</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">6</span>
+      <span class="stat-label">Career Tracks</span>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Career Roadmap</p>
+        <h2 class="section-title">Six Paths into the Industry</h2>
+        <p class="section-intro">Whether you're drawn to pricing risk, managing claims, or placing coverage, there's a career track built for your skills and interests.</p>
+      </div>
+      <div class="roadmap-grid reveal">
+        <div class="roadmap-card" data-num="01">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('underwriting')">Underwriting <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Assess and price risk across P&C, life, health, and specialty lines. Master policy forms, risk selection, and portfolio management.</p>
+          <div class="card-tags">
+            <span class="tag">P&C</span><span class="tag">Specialty</span><span class="tag">Cyber</span><span class="tag">Life & Health</span>
+          </div>
+        </div>
+        <div class="roadmap-card" data-num="02">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('actuarial')">Actuarial Science <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Use mathematics and statistics to quantify risk and set reserves. The most quantitative path — pursue the FSA or FCAS designation.</p>
+          <div class="card-tags">
+            <span class="tag">FSA</span><span class="tag">FCAS</span><span class="tag">Modeling</span><span class="tag">Reserving</span>
+          </div>
+        </div>
+        <div class="roadmap-card" data-num="03">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('broking')">Broking & Advisory <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Represent clients in the insurance marketplace, placing complex risks and structuring bespoke coverage programs at firms like Marsh, Aon, and WTW.</p>
+          <div class="card-tags">
+            <span class="tag">Placement</span><span class="tag">Client Relations</span><span class="tag">Wholesale</span>
+          </div>
+        </div>
+        <div class="roadmap-card" data-num="04">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('claims')">Claims Management <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Investigate and resolve insurance claims fairly and efficiently. A high-judgment role at the intersection of coverage analysis, negotiation, and customer service.</p>
+          <div class="card-tags">
+            <span class="tag">Coverage Analysis</span><span class="tag">Litigation</span><span class="tag">Negotiation</span>
+          </div>
+        </div>
+        <div class="roadmap-card" data-num="05">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('investment')">Investment Management <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Manage the float — the premiums collected before claims are paid. Insurance companies are among the largest institutional investors in the world.</p>
+          <div class="card-tags">
+            <span class="tag">Fixed Income</span><span class="tag">ALM</span><span class="tag">Portfolio</span>
+          </div>
+        </div>
+        <div class="roadmap-card" data-num="06">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="card-title" onclick="openModal('insurtech')">InsurTech & Analytics <span class="card-title-link-hint">↗ Deep Dive</span></div>
+          <p class="card-text">Harness data science, AI, and technology to transform how risk is modeled, priced, and distributed. The fastest-growing corner of the industry.</p>
+          <div class="card-tags">
+            <span class="tag">Data Science</span><span class="tag">AI/ML</span><span class="tag">Product</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Curated Resources</p>
+        <h2 class="section-title">Your Reading List</h2>
+        <p class="section-intro">Essential reports, frameworks, and publications every insurance professional should have on their radar.</p>
+      </div>
+      <div class="resources-grid reveal">
+        <div class="resource-category">
+          <div class="resource-cat-title">
+            <span>📊</span> Industry Reports & Research
+          </div>
+          <ul class="resource-list">
+            <li>Swiss Re Sigma — Annual global insurance market analysis</li>
+            <li>Aon Global Insurance Market Insights — Quarterly market conditions</li>
+            <li>Verizon DBIR — Data Breach Investigations Report for cyber risk</li>
+            <li>AM Best Market Review — Carrier financial strength trends</li>
+            <li>Munich Re NatCat Report — Natural catastrophe risk data</li>
+            <li>McKinsey Insurance Practice — Strategy and transformation insights</li>
+          </ul>
+        </div>
+        <div class="resource-category">
+          <div class="resource-cat-title">
+            <span>🎓</span> Certifications & Designations
+          </div>
+          <ul class="resource-list">
+            <li>CPCU — Chartered Property Casualty Underwriter (gold standard)</li>
+            <li>FSA / ASA — Fellow / Associate of the Society of Actuaries</li>
+            <li>FCAS / ACAS — Casualty Actuarial Society designations</li>
+            <li>CFA — Chartered Financial Analyst (investment track)</li>
+            <li>RPLU — Registered Professional Liability Underwriter</li>
+            <li>CERA — Chartered Enterprise Risk Analyst</li>
+          </ul>
+        </div>
+        <div class="resource-category">
+          <div class="resource-cat-title">
+            <span>🏛️</span> Regulatory & Frameworks
+          </div>
+          <ul class="resource-list">
+            <li>NAIC Model Laws — National Association of Insurance Commissioners</li>
+            <li>Solvency II — EU insurance capital requirements framework</li>
+            <li>NIST CSF — Cybersecurity framework for risk assessment</li>
+            <li>ISO 31000 — International standard for enterprise risk management</li>
+            <li>SEC Cyber Disclosure Rules — 2023 cybersecurity regulations</li>
+            <li>IFRS 17 — International insurance contract accounting standard</li>
+          </ul>
+        </div>
+        <div class="resource-category">
+          <div class="resource-cat-title">
+            <span>🏢</span> Target Employers & Firms
+          </div>
+          <ul class="resource-list">
+            <li>Carriers — AIG, Chubb, Travelers, Hartford, Liberty Mutual, Berkshire</li>
+            <li>Reinsurers — Munich Re, Swiss Re, Everest, RenaissanceRe</li>
+            <li>Brokers — Marsh, Aon, Willis Towers Watson, Gallagher, Ryan Specialty</li>
+            <li>Consulting — Milliman, Tillinghast, Oliver Wyman, Deloitte Actuarial</li>
+            <li>InsurTech — Lemonade, Coalition, Palomar, Corvus, Next Insurance</li>
+            <li>Lloyd's of London — The world's specialist insurance and reinsurance market</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section id="glossary">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Glossary</p>
+        <h2 class="section-title">Know the Language</h2>
+        <p class="section-intro">From loss ratios to cedants — master the terminology that sets professionals apart in any interview room.</p>
+        <input class="glossary-search" type="text" placeholder="Search terms..." id="glossarySearch" oninput="filterGlossary()" />
+      </div>
+      <div class="glossary-grid reveal" id="glossaryGrid">
+        <div class="glossary-item" data-term="loss ratio">
+          <div class="glossary-term">Loss Ratio</div>
+          <div class="glossary-sector">Underwriting · Core</div>
+          <p class="glossary-def">Incurred losses divided by earned premiums. The primary measure of underwriting profitability — a ratio below 100% means claims cost less than premiums collected.</p>
+        </div>
+        <div class="glossary-item" data-term="combined ratio">
+          <div class="glossary-term">Combined Ratio</div>
+          <div class="glossary-sector">Underwriting · Core</div>
+          <p class="glossary-def">Loss ratio plus expense ratio. Below 100% indicates underwriting profit. Most carriers target a combined ratio between 90–99%.</p>
+        </div>
+        <div class="glossary-item" data-term="cedant reinsurance">
+          <div class="glossary-term">Cedant</div>
+          <div class="glossary-sector">Reinsurance</div>
+          <p class="glossary-def">An insurance company that transfers (cedes) a portion of its risk to a reinsurer. The primary insurer in a reinsurance arrangement.</p>
+        </div>
+        <div class="glossary-item" data-term="treaty reinsurance">
+          <div class="glossary-term">Treaty Reinsurance</div>
+          <div class="glossary-sector">Reinsurance</div>
+          <p class="glossary-def">A standing reinsurance agreement that automatically covers a portfolio of risks, as opposed to facultative reinsurance which covers individual risks.</p>
+        </div>
+        <div class="glossary-item" data-term="adverse selection underwriting">
+          <div class="glossary-term">Adverse Selection</div>
+          <div class="glossary-sector">Underwriting</div>
+          <p class="glossary-def">The tendency for higher-risk individuals to seek more insurance coverage. A fundamental challenge in pricing — bad risks gravitate toward cheap coverage.</p>
+        </div>
+        <div class="glossary-item" data-term="moral hazard">
+          <div class="glossary-term">Moral Hazard</div>
+          <div class="glossary-sector">Risk Management</div>
+          <p class="glossary-def">The risk that having insurance reduces the incentive to prevent losses. A key reason for deductibles, co-pays, and coverage sublimits in policy design.</p>
+        </div>
+        <div class="glossary-item" data-term="actuarial reserve ibnr">
+          <div class="glossary-term">IBNR Reserve</div>
+          <div class="glossary-sector">Actuarial</div>
+          <p class="glossary-def">Incurred But Not Reported reserves — funds held for claims that have occurred but haven't yet been filed. A critical actuarial judgment item on the balance sheet.</p>
+        </div>
+        <div class="glossary-item" data-term="cat catastrophe model">
+          <div class="glossary-term">Catastrophe (Cat) Modeling</div>
+          <div class="glossary-sector">Actuarial · Underwriting</div>
+          <p class="glossary-def">Probabilistic modeling of large-scale disaster events (hurricanes, earthquakes, floods) to estimate potential losses and set appropriate premiums and capital.</p>
+        </div>
+        <div class="glossary-item" data-term="subrogation claims">
+          <div class="glossary-term">Subrogation</div>
+          <div class="glossary-sector">Claims</div>
+          <p class="glossary-def">The right of an insurer to pursue a third party that caused an insurance loss to the insured. After paying a claim, the insurer "steps into the shoes" of the insured.</p>
+        </div>
+        <div class="glossary-item" data-term="float investment warren buffett">
+          <div class="glossary-term">The Float</div>
+          <div class="glossary-sector">Investment · Finance</div>
+          <p class="glossary-def">Premiums collected that are held before claims are paid. Warren Buffett famously uses Berkshire's float as essentially free capital to invest — the engine of insurance as a business model.</p>
+        </div>
+        <div class="glossary-item" data-term="facultative reinsurance placement">
+          <div class="glossary-term">Facultative Reinsurance</div>
+          <div class="glossary-sector">Reinsurance</div>
+          <p class="glossary-def">Risk-by-risk reinsurance placement, where the reinsurer can accept or reject each individual risk. Used for large, unique, or hazardous exposures outside treaty limits.</p>
+        </div>
+        <div class="glossary-item" data-term="retrocession reinsurance market">
+          <div class="glossary-term">Retrocession</div>
+          <div class="glossary-sector">Reinsurance</div>
+          <p class="glossary-def">When a reinsurer passes on risk to another reinsurer (a retrocessionaire). The deepest layer of the global risk transfer chain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG / INSIGHTS -->
+  <section id="blog">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Club Insights</p>
+        <h2 class="section-title">What We're Reading</h2>
+        <p class="section-intro">Analysis, commentary, and career intel from the Insurance Club at Cornell.</p>
+      </div>
+      <div class="blog-grid reveal">
+        <div class="blog-card" onclick="openBlog('hardmarket')">
+          <div class="blog-card-img">
+            <div class="blog-card-img-pattern"></div>
+            <div class="blog-card-img-label">Hard Market<br>Conditions</div>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">Market Analysis · March 2025</div>
+            <div class="blog-title">Why the P&C Market Is Hardening Again — And What It Means for Your Career</div>
+            <p class="blog-excerpt">Rising loss costs, climate-driven cat activity, and capacity withdrawals are pushing rates higher across commercial lines. We break down what's happening and which roles are benefiting most from the shift.</p>
+          </div>
+        </div>
+        <div class="blog-card" onclick="openBlog('examp')">
+          <div class="blog-card-img">
+            <div class="blog-card-img-pattern"></div>
+            <div class="blog-card-img-label">Actuarial<br>Exams</div>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">Career Guide · Feb 2025</div>
+            <div class="blog-title">Passing Exam P: A Cornell Student's Playbook</div>
+            <p class="blog-excerpt">Practical advice from club members who've passed the first actuarial exam while navigating a full course load at Cornell. Study plans, resources, and hard-won lessons.</p>
+          </div>
+        </div>
+        <div class="blog-card" onclick="openBlog('negotiation')">
+          <div class="blog-card-img">
+            <div class="blog-card-img-pattern"></div>
+            <div class="blog-card-img-label">Negotiation<br>Tips</div>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-meta">Career Skills · Jan 2025</div>
+            <div class="blog-title">How to Negotiate Like an Insurance Professional</div>
+            <p class="blog-excerpt">Whether you're placing a risk, settling a claim, or negotiating your first offer, the principles are the same. Here's how to build the skill that separates good insurance professionals from great ones.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG MODAL -->
+  <div class="modal-overlay" id="blog-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-num" id="blog-modal-meta"></div>
+        <div class="modal-title" id="blog-modal-title"></div>
+        <button class="modal-close" onclick="closeBlog()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="blog-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- JOIN -->
+  <section id="join">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Get Involved</p>
+        <h2 class="section-title">Join the Club</h2>
+        <p class="section-intro">We welcome students from every major — you don't need to study finance or business to thrive in insurance.</p>
+      </div>
+      <div class="join-cards reveal">
+        <div class="join-card">
+          <div class="join-card-icon">🎤</div>
+          <div class="join-card-title">Speaker Events</div>
+          <p class="join-card-text">Industry leaders from carriers, brokers, and reinsurers visit campus each semester.</p>
+        </div>
+        <div class="join-card">
+          <div class="join-card-icon">📁</div>
+          <div class="join-card-title">Case Competitions</div>
+          <p class="join-card-text">Tackle real underwriting and risk problems with prizes and recruiting visibility.</p>
+        </div>
+        <div class="join-card">
+          <div class="join-card-icon">🤝</div>
+          <div class="join-card-title">Mentorship</div>
+          <p class="join-card-text">Get paired with alumni working across the industry for 1-on-1 guidance.</p>
+        </div>
+        <div class="join-card">
+          <div class="join-card-icon">🏙️</div>
+          <div class="join-card-title">NYC Trek</div>
+          <p class="join-card-text">Annual trip to meet firms in Midtown Manhattan and the World Financial Center.</p>
+        </div>
+      </div>
+      <a href="contact.html" target="_blank" class="btn-cream reveal">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- CONTACT MODAL -->
+  <div class="modal-overlay" id="contact-modal">
+    <div class="modal" role="dialog" aria-modal="true" style="max-width:560px;">
+      <div class="modal-header">
+        <div class="modal-num">Get Involved</div>
+        <div class="modal-title">Apply for Membership</div>
+        <div class="modal-tagline">We'd love to hear from you.</div>
+        <button class="modal-close" onclick="closeContact()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section" style="margin-bottom:1.5rem;">
+          <div class="modal-section-title">Reach Us Directly</div>
+          <p style="font-size:0.95rem;color:var(--text-light);margin-bottom:0.25rem;">You can also email us directly at:</p>
+          <a href="mailto:insuranceandriskmanclubcornell@gmail.com" style="font-family:'Montserrat',sans-serif;font-size:0.82rem;font-weight:600;color:var(--cornell-red);word-break:break-all;">insuranceandriskmanclubcornell@gmail.com</a>
+        </div>
+        <div class="modal-section" style="margin-bottom:0;">
+          <div class="modal-section-title">Send Us a Message</div>
+          <div id="contact-success" style="display:none;background:rgba(139,26,26,0.08);border-left:3px solid var(--cornell-red);padding:1rem 1.25rem;margin-bottom:1.5rem;font-family:'Montserrat',sans-serif;font-size:0.85rem;color:var(--cornell-red);font-weight:600;">
+            ✓ Message sent! We'll be in touch soon.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div>
+              <label class="form-label">Full Name <span style="color:var(--cornell-red);">*</span></label>
+              <input class="form-input" id="cf-name" type="text" placeholder="Jane Smith" required />
+              <div class="form-error" id="err-name">Please enter your name.</div>
+            </div>
+            <div>
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" id="cf-phone" type="tel" placeholder="(607) 555-0100" />
+            </div>
+            <div>
+              <label class="form-label">Email Address <span style="color:var(--cornell-red);">*</span></label>
+              <input class="form-input" id="cf-email" type="email" placeholder="js123@cornell.edu" required />
+              <div class="form-error" id="err-email">Please enter a valid email.</div>
+            </div>
+            <div>
+              <label class="form-label">What would you like to discuss?</label>
+              <textarea class="form-input" id="cf-message" rows="4" placeholder="Tell us about yourself, your interest in insurance, questions about the club…" style="resize:vertical;"></textarea>
+            </div>
+            <button onclick="submitContact()" class="btn-primary" style="border:none;cursor:pointer;width:100%;padding:1rem;font-size:0.75rem;">Send Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-brand">Insurance Club at Cornell</span>
+    <ul class="footer-links">
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#blog">Insights</a></li>
+      <li><a href="#join">Join</a></li>
+    </ul>
+    <span class="footer-copy">© 2025 Insurance Club at Cornell</span>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Glossary filter
+    function filterGlossary() {
+      const query = document.getElementById('glossarySearch').value.toLowerCase();
+      const items = document.querySelectorAll('.glossary-item');
+      items.forEach(item => {
+        const text = item.getAttribute('data-term') + ' ' + item.innerText.toLowerCase();
+        item.classList.toggle('glossary-hidden', !text.includes(query));
+      });
+    }
+
+        // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 80) {
+        nav.style.boxShadow = '0 2px 20px rgba(26,16,8,0.1)';
+      } else {
+        nav.style.boxShadow = 'none';
+      }
+    });
+
+    // ── DEEP DIVE MODALS ──────────────────────────────────────────
+    const modalData = {
+      underwriting: {
+        num: 'Path 01',
+        title: 'Underwriting',
+        tagline: 'The art and science of pricing risk.',
+        overview: `Underwriters are the core decision-makers of the insurance industry. Your job is to evaluate applications, assess exposure, and decide whether to offer coverage — and at what price. You're the gatekeeper between the company's capital and the risks it takes on.`,
+        overview2: `The role spans an enormous range of lines: property, casualty, marine, aviation, cyber, professional liability, life, and health. Many underwriters specialize in one or two areas and build deep expertise in that sector's risk drivers, loss patterns, and competitive dynamics.`,
+        whatYouDo: [
+          'Review submissions from brokers and assess risk quality',
+          'Analyze financial statements, loss runs, and risk surveys',
+          'Apply rating methodology and price coverage appropriately',
+          'Negotiate terms, conditions, and endorsements with brokers',
+          'Manage a book of business within authority limits',
+          'Monitor portfolio performance and aggregate exposure',
+          'Stay current on market conditions, competitor pricing, and emerging risks',
+        ],
+        skills: [
+          'Analytical thinking and pattern recognition',
+          'Coverage and policy form literacy',
+          'Financial statement analysis',
+          'Broker relationship management',
+          'Understanding of loss development and frequency/severity',
+          'Negotiation and decisiveness under ambiguity',
+        ],
+        roles: [
+          'Junior/Associate Underwriter',
+          'Underwriter',
+          'Senior Underwriter',
+          'Underwriting Manager',
+          'Chief Underwriting Officer (CUO)',
+        ],
+        firms: ['Chubb', 'AIG', 'Travelers', 'Hartford', 'Berkshire Hathaway', 'Munich Re', 'Lloyd\'s Syndicates', 'Ryan Specialty'],
+        certs: ['CPCU', 'RPLU (Professional Lines)', 'AU (Associate in Underwriting)', 'AINS'],
+        salary: 'Entry-level: $65K–$85K | Mid-level: $95K–$140K | Senior/Manager: $150K–$220K+',
+        tags: ['P&C', 'Specialty Lines', 'Cyber', 'Life & Health', 'Marine', 'Aviation', 'Reinsurance'],
+      },
+      actuarial: {
+        num: 'Path 02',
+        title: 'Actuarial Science',
+        tagline: 'Quantifying uncertainty with mathematics.',
+        overview: `Actuaries are the mathematicians of insurance. You use probability theory, statistics, and financial modeling to estimate the likelihood and cost of future events — from car accidents to pandemics to natural disasters. The work underpins pricing, reserving, capital management, and product design.`,
+        overview2: `The actuarial path is one of the most credentialed in finance. Earning the FSA (Fellow of the Society of Actuaries) or FCAS (Fellow of the Casualty Actuarial Society) typically takes 7–10 years of exams, but each exam passed significantly boosts earning potential and opens new doors.`,
+        whatYouDo: [
+          'Price insurance products using loss data, exposure trends, and statistical models',
+          'Set loss reserves — the liabilities insurers must hold for future claim payments',
+          'Build catastrophe and scenario models to stress-test capital adequacy',
+          'Advise leadership on pricing strategy, profitability, and product viability',
+          'Conduct experience studies comparing actual vs. expected results',
+          'Support regulatory filings and Solvency II / NAIC compliance',
+          'Work with investment teams on Asset-Liability Management (ALM)',
+        ],
+        skills: [
+          'Advanced mathematics, probability, and statistics',
+          'Excel, R, Python, or SAS proficiency',
+          'Attention to detail and intellectual rigor',
+          'Communication of complex findings to non-technical stakeholders',
+          'Disciplined exam preparation and self-study',
+        ],
+        roles: [
+          'Actuarial Analyst (pre-credentialed)',
+          'Associate Actuary (ASA/ACAS)',
+          'Fellow Actuary (FSA/FCAS)',
+          'Pricing Actuary / Reserving Actuary',
+          'Chief Actuary',
+        ],
+        firms: ['Milliman', 'Towers Watson', 'Oliver Wyman', 'Deloitte Actuarial', 'Munich Re', 'Swiss Re', 'All major carriers'],
+        certs: ['Exam P (Probability)', 'Exam FM (Financial Math)', 'ASA → FSA (Life)', 'ACAS → FCAS (Casualty)', 'CERA (Enterprise Risk)'],
+        salary: 'Analyst: $70K–$95K | Associate Actuary: $110K–$150K | Fellow: $160K–$250K+',
+        tags: ['Pricing', 'Reserving', 'Capital Modeling', 'Cat Modeling', 'ALM', 'Product Development'],
+      },
+      broking: {
+        num: 'Path 03',
+        title: 'Broking & Advisory',
+        tagline: 'The relationship engine of the insurance market.',
+        overview: `Brokers represent buyers of insurance, not sellers. Your job is to understand a client's risk profile, access the market to find capacity, negotiate the best terms, and structure a coverage program that genuinely protects them. You sit at the intersection of client service, risk analysis, and market knowledge.`,
+        overview2: `The largest broking firms — Marsh, Aon, WTW, Gallagher — operate globally and place billions in premium annually. Specialty and wholesale brokers like Ryan Specialty and AmWINS focus on hard-to-place and complex risks, often requiring deeper underwriting knowledge and creativity to get deals done.`,
+        whatYouDo: [
+          'Gather and analyze client risk exposures and insurance needs',
+          'Prepare and market submissions to underwriters',
+          'Negotiate pricing, terms, and conditions on behalf of clients',
+          'Structure layered programs for large or complex risks',
+          'Advise clients on risk management and loss control strategies',
+          'Manage renewals and respond to mid-term coverage questions',
+          'Build relationships with both clients and market underwriters',
+        ],
+        skills: [
+          'Client relationship management and trust-building',
+          'Market knowledge — who writes what and at what terms',
+          'Written and verbal communication',
+          'Policy form and coverage analysis',
+          'Negotiation and persistence',
+          'Project management across multiple accounts simultaneously',
+        ],
+        roles: [
+          'Associate Broker / Client Analyst',
+          'Broker',
+          'Senior Broker / Account Executive',
+          'Practice Leader',
+          'Managing Director',
+        ],
+        firms: ['Marsh', 'Aon', 'Willis Towers Watson', 'Gallagher', 'Ryan Specialty', 'AmWINS', 'HUB International'],
+        certs: ['CPCU', 'CIC (Certified Insurance Counselor)', 'ARM (Associate in Risk Management)', 'State P&C License'],
+        salary: 'Entry-level: $60K–$80K + bonus | Mid-level: $100K–$160K | Senior/MD: $200K–$400K+ (commission-driven)',
+        tags: ['Retail Broking', 'Wholesale', 'Specialty', 'Client Advisory', 'Program Business', 'Reinsurance Broking'],
+      },
+      claims: {
+        num: 'Path 04',
+        title: 'Claims Management',
+        tagline: 'Where the promise of insurance becomes real.',
+        overview: `Claims professionals are the people who deliver on what insurance actually promises. When a policyholder suffers a loss — a fire, a lawsuit, a cyberattack — it's the claims team that investigates the event, determines coverage, and manages the resolution. It's the highest-stakes, most human-facing role in the industry.`,
+        overview2: `Claims isn't just administration. Senior claims professionals manage multi-million dollar litigation strategies, negotiate complex settlements, work alongside forensic accountants and legal counsel, and make coverage determinations that can define whether a company survives a catastrophe. The analytical and legal dimensions of the role are substantial.`,
+        whatYouDo: [
+          'Investigate the facts of a claim — gathering evidence, interviewing witnesses',
+          'Apply policy language to determine what coverage applies',
+          'Set reserves — the estimated ultimate cost of a claim',
+          'Manage outside counsel, forensic experts, and third-party adjusters',
+          'Negotiate settlements with claimants and their attorneys',
+          'Identify subrogation and recovery opportunities',
+          'Handle large loss, catastrophe, and complex liability claims',
+        ],
+        skills: [
+          'Coverage analysis and policy interpretation',
+          'Legal and regulatory knowledge (varies by state/country)',
+          'Negotiation, empathy, and decisiveness',
+          'Organization and file management across large caseloads',
+          'Comfort working with attorneys, courts, and expert witnesses',
+          'Financial analysis for business interruption and liability claims',
+        ],
+        roles: [
+          'Claims Analyst / Junior Adjuster',
+          'Claims Adjuster',
+          'Senior Claims Adjuster',
+          'Claims Manager / Team Lead',
+          'VP of Claims / Chief Claims Officer',
+        ],
+        firms: ['Travelers', 'Chubb', 'Zurich', 'AIG', 'Liberty Mutual', 'Sedgwick (TPA)', 'Gallagher Bassett (TPA)'],
+        certs: ['AIC (Associate in Claims)', 'CPCU', 'SCLA (Senior Claims Law Associate)', 'State Adjuster License'],
+        salary: 'Entry-level: $55K–$75K | Mid-level: $85K–$125K | Senior/Manager: $130K–$200K+',
+        tags: ['Property Claims', 'Liability Claims', 'Cyber Claims', 'Workers\' Comp', 'Catastrophe', 'Subrogation'],
+      },
+      investment: {
+        num: 'Path 05',
+        title: 'Investment Management',
+        tagline: 'Deploying the float — insurance\'s hidden edge.',
+        overview: `Insurance companies collect premiums today and pay claims in the future. The gap between those two events — the "float" — represents an enormous pool of investable capital. Warren Buffett built Berkshire Hathaway's empire largely on this concept. Managing that float well is a core driver of insurer profitability.`,
+        overview2: `Insurance investment portfolios are unique: they must be liquid enough to pay claims, conservative enough to satisfy regulators, and return enough to subsidize underwriting. The work sits at the intersection of fixed income, ALM, credit analysis, and regulatory capital management — a rich and under-appreciated corner of asset management.`,
+        whatYouDo: [
+          'Manage fixed income portfolios (corporate bonds, munis, structured products)',
+          'Conduct Asset-Liability Management (ALM) to match asset duration to claim liabilities',
+          'Monitor credit quality and interest rate risk across the portfolio',
+          'Work with actuaries to model liability cash flows and investment needs',
+          'Ensure compliance with state investment regulations and NAIC guidelines',
+          'Evaluate alternative investments (private credit, real estate, infrastructure)',
+          'Present portfolio performance and risk metrics to leadership',
+        ],
+        skills: [
+          'Fixed income analysis and bond math',
+          'Portfolio construction and risk management',
+          'Understanding of insurance liabilities and reserving',
+          'Bloomberg and investment analytics platforms',
+          'Regulatory literacy (NAIC, Solvency II)',
+          'Communication of investment strategy to non-investment audiences',
+        ],
+        roles: [
+          'Investment Analyst',
+          'Fixed Income Portfolio Manager',
+          'ALM Analyst',
+          'Chief Investment Officer (CIO)',
+          'Insurance Asset Management (at external managers)',
+        ],
+        firms: ['PIMCO (insurance mandates)', 'BlackRock (FMA)', 'Voya', 'Nuveen', 'Conning', 'All major carriers'],
+        certs: ['CFA (Chartered Financial Analyst)', 'CAIA', 'FRM', 'CFA + Actuarial combo highly valued'],
+        salary: 'Analyst: $80K–$110K | PM: $130K–$200K | CIO: $300K–$700K+',
+        tags: ['Fixed Income', 'ALM', 'Private Credit', 'Portfolio Management', 'Capital Management', 'Structured Products'],
+      },
+      insurtech: {
+        num: 'Path 06',
+        title: 'InsurTech & Analytics',
+        tagline: 'Rebuilding insurance from the ground up with data.',
+        overview: `InsurTech is the collision of insurance and technology — and it's transforming every corner of the industry. From AI-driven underwriting models and real-time telematics pricing to automated claims triage and embedded insurance, the pace of change is accelerating. This path is for those who want to be at the forefront of that transformation.`,
+        overview2: `The opportunity isn't just at startups. Every major carrier is investing heavily in data science, machine learning, and digital distribution. Whether you join a carrier's analytics team, a venture-backed InsurTech, or a consulting firm building insurance models, the demand for people who can bridge insurance expertise and technical capability is enormous.`,
+        whatYouDo: [
+          'Build predictive models for pricing, fraud detection, and claims triage',
+          'Develop telematics, satellite, and IoT data pipelines for risk scoring',
+          'Design and test new insurance products and distribution channels',
+          'Work on core platform modernization and API-first architecture',
+          'Analyze large loss datasets to uncover pricing signals',
+          'Partner with underwriters and actuaries to productionize models',
+          'Conduct A/B testing and measure the impact of pricing or product changes',
+        ],
+        skills: [
+          'Python, R, SQL — proficiency in at least two',
+          'Machine learning and statistical modeling',
+          'Data visualization (Tableau, Power BI, or similar)',
+          'Understanding of insurance products and risk concepts',
+          'Product thinking and ability to work in agile environments',
+          'Communication of technical findings to business stakeholders',
+        ],
+        roles: [
+          'Data Analyst / Data Scientist',
+          'Pricing Analyst (technical)',
+          'Product Manager (InsurTech)',
+          'ML Engineer',
+          'Head of Data / Chief Analytics Officer',
+        ],
+        firms: ['Lemonade', 'Coalition', 'Corvus', 'Next Insurance', 'Hippo', 'Palomar', 'Travelers Analytics', 'Verisk'],
+        certs: ['Actuarial exams (P, FM)', 'AWS / GCP Data certs', 'CPCU for domain context', 'Coursera ML Specialization'],
+        salary: 'Analyst: $75K–$100K | Senior Data Scientist: $120K–$175K | Lead/Manager: $180K–$280K+',
+        tags: ['Data Science', 'AI/ML', 'Telematics', 'Embedded Insurance', 'Fraud Detection', 'Product Management'],
+      },
+    };
+
+    function openModal(key) {
+      const d = modalData[key];
+      if (!d) return;
+      document.getElementById('modal-num').textContent = d.num;
+      document.getElementById('modal-title').textContent = d.title;
+      document.getElementById('modal-tagline').textContent = d.tagline;
+      document.getElementById('modal-overview').textContent = d.overview;
+      document.getElementById('modal-overview2').textContent = d.overview2;
+
+      document.getElementById('modal-whatyoudo').innerHTML = d.whatYouDo.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('modal-skills').innerHTML = d.skills.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('modal-roles').innerHTML = d.roles.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('modal-firms').innerHTML = d.firms.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('modal-certs').innerHTML = d.certs.map(i => `<li>${i}</li>`).join('');
+      document.getElementById('modal-salary').innerHTML = `<strong>Typical Compensation</strong>${d.salary}`;
+      document.getElementById('modal-tags').innerHTML = d.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+
+      document.getElementById('path-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('path-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('path-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    // ── BLOG MODALS ───────────────────────────────────────────────
+    const blogData = {
+      hardmarket: {
+        meta: 'Market Analysis · March 2025',
+        title: 'Why the P&C Market Is Hardening Again — And What It Means for Your Career',
+        body: `
+          <div class="blog-body-text">
+            <p>If you've been paying attention to the insurance industry over the past 18 months, you've likely noticed a shift. Premiums are rising. Carriers are pulling back from certain geographies and lines. Brokers are working harder to find capacity. This is what the industry calls a <strong>hard market</strong> — and understanding its causes and consequences is essential for anyone building a career in insurance.</p>
+
+            <h3>What Is a Hard Market?</h3>
+            <p>Insurance markets cycle between "soft" periods — characterized by abundant capacity, competitive pricing, and broad coverage — and "hard" periods where capacity tightens, rates increase, and carriers become more selective. The current hardening follows one of the most prolonged soft markets in modern history, and it's been triggered by a convergence of factors.</p>
+
+            <h3>What's Driving the Current Hardening?</h3>
+            <ul>
+              <li><strong>Climate losses:</strong> Back-to-back years of elevated hurricane, wildfire, flood, and severe convective storm losses have hammered carrier loss ratios, particularly in property.</li>
+              <li><strong>Social inflation:</strong> Jury verdicts and litigation funding have driven liability losses well above historical trends. Nuclear verdicts — awards exceeding $10M — are becoming more common across auto, GL, and excess lines.</li>
+              <li><strong>Reinsurance repricing:</strong> Reinsurers absorbed years of underpriced risk and have significantly raised rates and tightened terms at renewals, pushing costs back down to primary carriers.</li>
+              <li><strong>Elevated combined ratios:</strong> Many carriers ran combined ratios above 100% for multiple consecutive years — meaning they paid out more in claims and expenses than they collected in premium. That math is unsustainable.</li>
+              <li><strong>Investment income compression:</strong> The low interest rate environment of the 2010s reduced insurers' ability to subsidize underwriting losses through investment returns.</li>
+            </ul>
+
+            <div class="blog-pull-quote">"In a hard market, underwriting discipline stops being a competitive differentiator and starts being a survival requirement."</div>
+
+            <h3>Which Lines Are Hardening Most?</h3>
+            <ul>
+              <li><strong>Property (CAT-exposed):</strong> Florida homeowners, Gulf Coast commercial property, and California wildfire zones have seen dramatic rate increases and carrier exits.</li>
+              <li><strong>Excess & Surplus (E&S):</strong> Risks that can't find standard market capacity are flooding into the E&S market, creating enormous opportunity for specialty underwriters.</li>
+              <li><strong>Umbrella / Excess Liability:</strong> Social inflation has hammered this line. Capacity is scarce and rates continue to climb.</li>
+              <li><strong>Cyber:</strong> After a catastrophic ransomware cycle in 2020–2021, cyber markets hardened sharply. Rates have since stabilized as carriers improved underwriting rigor, but remain elevated.</li>
+              <li><strong>Workers' Compensation:</strong> One of the few lines in a soft phase — years of favorable trends and reserve releases have kept competition strong.</li>
+            </ul>
+
+            <h3>What It Means for Your Career</h3>
+            <p>Hard markets create real opportunity for early-career professionals. When carriers are selective and brokers are scrambling for capacity, deep technical knowledge becomes exceptionally valuable. Underwriters who can evaluate complex risks, brokers who know which markets will say yes and why, and claims professionals who can manage high-severity losses efficiently are in high demand.</p>
+            <p>If you're entering the industry now, lean into the technical side early. Read loss runs. Understand what drives a combined ratio. Know which lines are struggling and why. That foundation will serve you whether markets are hard or soft.</p>
+          </div>
+        `
+      },
+      examp: {
+        meta: 'Career Guide · February 2025',
+        title: 'Passing Exam P: A Cornell Student\'s Playbook',
+        body: `
+          <div class="blog-body-text">
+            <p>Exam P — the first exam on the actuarial pathway — tests your knowledge of probability theory and its applications to insurance and risk. It's a 3-hour, 30-question multiple choice exam, and while the math is largely covered in Cornell coursework, passing requires a different kind of preparation than most academic exams. Here's what club members who've cleared it recommend.</p>
+
+            <h3>What's Actually on the Exam</h3>
+            <p>Exam P covers probability fundamentals: sample spaces, discrete and continuous distributions, joint distributions, conditional probability, and moment generating functions. The SOA publishes a detailed syllabus and a full bank of past problems — use them. The exam is computational but also tests conceptual understanding under time pressure.</p>
+            <ul>
+              <li>General probability, Bayes' theorem, independence</li>
+              <li>Univariate distributions: Normal, Poisson, Exponential, Gamma, Beta</li>
+              <li>Joint, marginal, and conditional distributions</li>
+              <li>Transformations of random variables</li>
+              <li>Loss models: deductibles, policy limits, coinsurance</li>
+              <li>Moment generating functions and variance calculations</li>
+            </ul>
+
+            <h3>The Study Plan That Works</h3>
+            <p>Most candidates spend 200–300 hours studying. For Cornell students balancing a full course load, spreading that over 3–4 months is realistic. Here's the structure that members have found most effective:</p>
+            <ul>
+              <li><strong>Weeks 1–4:</strong> Work through ACTEX or ASM study manual cover to cover. Don't skip sections even if they feel familiar from MATH 4710 or ORIE classes.</li>
+              <li><strong>Weeks 5–8:</strong> Begin timed problem sets. Aim for 30 problems per session. Track which topic areas are costing you the most time.</li>
+              <li><strong>Weeks 9–12:</strong> Full practice exams under real conditions — 3 hours, no interruptions. Review every wrong answer in depth, not just the solution but why your approach was off.</li>
+              <li><strong>Final 2 weeks:</strong> Light review, focus on weak areas, protect your sleep. Cramming new material close to the exam date tends to backfire.</li>
+            </ul>
+
+            <div class="blog-pull-quote">"The hardest part of Exam P isn't the math — it's building the stamina and speed to work through 30 problems accurately in 3 hours."</div>
+
+            <h3>Resources Members Swear By</h3>
+            <ul>
+              <li><strong>ACTEX or ASM study manuals</strong> — both are solid; pick one and stick with it</li>
+              <li><strong>SOA sample questions</strong> — essential; the released problem bank mirrors the real exam closely</li>
+              <li><strong>Coaching Actuaries</strong> — strong adaptive practice platform with performance analytics</li>
+              <li><strong>The Infinite Actuary (TIA)</strong> — excellent video explanations for conceptually tricky topics</li>
+              <li><strong>Study groups with other Cornell actuarial students</strong> — talking through problems aloud accelerates understanding</li>
+            </ul>
+
+            <h3>A Note on Timing</h3>
+            <p>Most students take Exam P after completing MATH 4710 (Probability) or equivalent. Junior or senior year is typical, though motivated sophomores who've taken the prerequisite coursework have passed. Register for a specific date early — having a deadline on the calendar makes the study schedule feel real. The exam is offered year-round at Prometric testing centers.</p>
+          </div>
+        `
+      },
+      negotiation: {
+        meta: 'Career Skills · January 2025',
+        title: 'How to Negotiate Like an Insurance Professional',
+        body: `
+          <div class="blog-body-text">
+            <p>Negotiation is the invisible skill running through almost every role in the insurance industry. Underwriters negotiate terms with brokers. Brokers negotiate coverage and pricing on behalf of clients. Claims professionals negotiate settlements worth millions of dollars. And every professional, at some point, negotiates their own compensation. Learning to do it well early is one of the highest-return investments you can make in your career.</p>
+
+            <h3>The Fundamental Principle: Negotiation Is Information Exchange</h3>
+            <p>Most people approach negotiation as a contest — a battle of positions. The best insurance professionals approach it differently: as a process of exchanging information to find an outcome that works for both sides. The underwriter who understands why a broker is pushing back on terms can often find a creative solution. The claims adjuster who knows what a claimant actually needs can reach resolution faster and cheaper than one who simply defends a number.</p>
+
+            <div class="blog-pull-quote">"The most dangerous negotiator in the room is the one who's done the most homework. Know your number, know their number, and know why."</div>
+
+            <h3>Core Techniques That Transfer Across Insurance Roles</h3>
+            <ul>
+              <li><strong>Anchor first when you have the advantage.</strong> In salary negotiations, the first number sets the range. In coverage negotiations, the initial offer shapes expectations. Whoever anchors first has a structural edge — but only if their anchor is credible and well-reasoned.</li>
+              <li><strong>Silence is a tool.</strong> After making an offer or proposal, stop talking. Many negotiators talk themselves out of a better outcome by filling silence with unnecessary concessions.</li>
+              <li><strong>Label emotions, don't ignore them.</strong> Particularly in claims: "It sounds like you're frustrated with how long this process has taken" is disarming and often opens the door to resolution far faster than legal pressure alone.</li>
+              <li><strong>Make concessions feel deliberate.</strong> Each concession should come with a reason or reciprocal ask. Giving ground freely signals that you have more ground to give.</li>
+              <li><strong>Know your BATNA.</strong> Your Best Alternative to a Negotiated Agreement is your true source of leverage. In underwriting, it might be your ability to decline. In salary negotiation, it's your competing offer. Never negotiate without knowing yours.</li>
+            </ul>
+
+            <h3>Negotiating Your First Offer in Insurance</h3>
+            <p>The insurance industry tends to have more negotiating room than candidates expect — especially at broker and carrier training programs. Base salary bands are often set but bonuses, start dates, signing bonuses, and remote flexibility frequently have flexibility.</p>
+            <ul>
+              <li>Research market rates using Glassdoor, LinkedIn Salary, and direct conversations with club alumni</li>
+              <li>Always negotiate — a polite counteroffer almost never causes an offer to be rescinded</li>
+              <li>Frame your ask around market data, not personal need: "Based on my research and the competing offers I'm considering…"</li>
+              <li>If base is truly fixed, ask about accelerating your first performance review or bumping your signing bonus</li>
+              <li>Get everything in writing before declining other offers</li>
+            </ul>
+
+            <h3>The Long Game: Negotiation as Relationship Management</h3>
+            <p>In insurance, you negotiate with the same counterparties repeatedly over years. The broker who extracts the last dollar in every deal builds a reputation that eventually closes doors. The underwriter who is known for being fair, creative, and honest in tough conversations builds a market presence that generates opportunities for decades. Negotiation skill and professional reputation are deeply intertwined — the goal is never just the deal in front of you.</p>
+          </div>
+        `
+      }
+    };
+
+    function openBlog(key) {
+      const d = blogData[key];
+      if (!d) return;
+      document.getElementById('blog-modal-meta').textContent = d.meta;
+      document.getElementById('blog-modal-title').textContent = d.title;
+      document.getElementById('blog-modal-body').innerHTML = d.body;
+      document.getElementById('blog-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBlog() {
+      document.getElementById('blog-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('blog-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeBlog();
+    });
+
+    // ── CONTACT MODAL ─────────────────────────────────────────────
+    function openContact() {
+      document.getElementById('contact-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeContact() {
+      document.getElementById('contact-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('contact-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeContact();
+    });
+
+    function submitContact() {
+      const name = document.getElementById('cf-name');
+      const email = document.getElementById('cf-email');
+      const errName = document.getElementById('err-name');
+      const errEmail = document.getElementById('err-email');
+      let valid = true;
+
+      // Reset errors
+      name.classList.remove('error'); errName.classList.remove('visible');
+      email.classList.remove('error'); errEmail.classList.remove('visible');
+
+      if (!name.value.trim()) {
+        name.classList.add('error'); errName.classList.add('visible'); valid = false;
+      }
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(email.value.trim())) {
+        email.classList.add('error'); errEmail.classList.add('visible'); valid = false;
+      }
+
+      if (!valid) return;
+
+      // Build mailto link and trigger
+      const subject = encodeURIComponent('Insurance Club at Cornell — Membership Inquiry');
+      const body = encodeURIComponent(
+        `Name: ${document.getElementById('cf-name').value}\n` +
+        `Phone: ${document.getElementById('cf-phone').value || 'N/A'}\n` +
+        `Email: ${document.getElementById('cf-email').value}\n\n` +
+        `Message:\n${document.getElementById('cf-message').value}`
+      );
+      window.location.href = `mailto:insuranceandriskmanclubcornell@gmail.com?subject=${subject}&body=${body}`;
+
+      // Show success message
+      document.getElementById('contact-success').style.display = 'block';
+      document.getElementById('cf-name').value = '';
+      document.getElementById('cf-phone').value = '';
+      document.getElementById('cf-email').value = '';
+      document.getElementById('cf-message').value = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { closeBlog(); closeContact(); }
+    });
+  </script>
+
+  <!-- PATH DEEP DIVE MODAL -->
+  <div class="modal-overlay" id="path-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-num" id="modal-num"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-tagline" id="modal-tagline"></div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">Overview</div>
+          <p id="modal-overview"></p>
+          <p id="modal-overview2"></p>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">What You'll Do</div>
+          <ul class="modal-list" id="modal-whatyoudo"></ul>
+        </div>
+        <div class="modal-two-col">
+          <div class="modal-section">
+            <div class="modal-section-title">Key Skills</div>
+            <ul class="modal-list" id="modal-skills"></ul>
+          </div>
+          <div class="modal-section">
+            <div class="modal-section-title">Career Progression</div>
+            <ul class="modal-list" id="modal-roles"></ul>
+          </div>
+        </div>
+        <div class="modal-two-col">
+          <div class="modal-section">
+            <div class="modal-section-title">Target Firms</div>
+            <ul class="modal-list" id="modal-firms"></ul>
+          </div>
+          <div class="modal-section">
+            <div class="modal-section-title">Certifications to Pursue</div>
+            <ul class="modal-list" id="modal-certs"></ul>
+          </div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Compensation</div>
+          <div class="modal-salary" id="modal-salary"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Specializations</div>
+          <div class="modal-tags" id="modal-tags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
